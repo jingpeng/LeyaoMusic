@@ -4,19 +4,27 @@ import {
   Text,
   Image
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 export default class WelcomePage extends Component {
+
+  componentDidMount() {
+    setTimeout(() => {
+      Actions.login()
+    }, 3000)
+  }
+
   render() {
     return (
       <Image
         source={require('../resource/welcome-background.jpg')}
         style={{
-          flex:1,
-          alignItems:'center',
-          justifyContent:'center',
-          width:null,
-          width:null,
-          backgroundColor:'rgba(0,0,0,0)',
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: null,
+          height: null,
+          backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
         <View>
           <Text
