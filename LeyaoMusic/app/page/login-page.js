@@ -8,6 +8,22 @@ import {
 } from 'react-native';
 
 export default class LoginPage extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = { loginEnable: true }
+  }
+
+  login() {
+    if(!this.state.loginEnable){
+      return
+    } else {
+      this.setState({
+        loginEnable: !this.state.loginEnable
+      })
+    }
+  }
+
   render() {
     return (
       <Image
@@ -90,12 +106,13 @@ export default class LoginPage extends Component {
               marginTop: 10,
               backgroundColor: 'rgba(255, 255, 255, 0.8)'
             }}/>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={this.login.bind(this)}>
             <View
               style={{
                 width: 290,
                 height: 40,
-                backgroundColor: 'rgba(179, 214, 110, 0.6)',
+                backgroundColor: this.state.loginEnable ? 'rgba(179, 214, 110, 0.6)' : 'rgba(204, 204, 204, 0.6)',
                 marginTop: 69,
                 alignItems: 'center',
                 borderRadius: 20,
@@ -105,7 +122,7 @@ export default class LoginPage extends Component {
                 style={{
                   fontFamily: 'ArialMT',
                   fontSize: 17,
-                  color: '#ffffff'
+                  color: this.state.loginEnable ? '#ffffff' : '#333333'
                 }}>登录</Text>
             </View>
           </TouchableWithoutFeedback>
