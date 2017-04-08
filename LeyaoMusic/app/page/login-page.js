@@ -6,12 +6,18 @@ import {
   Image,
   TouchableWithoutFeedback
 } from 'react-native';
+import {
+  Actions,
+  ActionConst
+} from 'react-native-router-flux';
 
 export default class LoginPage extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { loginEnable: true }
+    this.state = {
+      loginEnable: true
+    }
   }
 
   login() {
@@ -24,10 +30,14 @@ export default class LoginPage extends Component {
     }
   }
 
+  setPassword() {
+    Actions.set_password()
+  }
+
   render() {
     return (
       <Image
-        source={require('../resource/login-background.png')}
+        source={ require('../resource/login-background.jpg') }
         style={{
           flex: 1,
           alignItems: 'center',
@@ -51,7 +61,7 @@ export default class LoginPage extends Component {
                 width: 21,
                 height: 21
               }}
-              source={require('../resource/welcome-background.jpg')}/>
+              source={ require('../resource/icon-phone.jpg') }/>
             <TextInput
               style={{
                 width: 186,
@@ -61,11 +71,11 @@ export default class LoginPage extends Component {
                 color: '#ffffff',
                 marginTop: 3
               }}
-              caretHidden={true}
-              keyboardType={'numeric'}
-              multiline={false}
-              placeholder={'请输入'}
-              placeholderTextColor={'#ffffff'}/>
+              caretHidden={ false }
+              keyboardType={ 'numeric' }
+              multiline={ false }
+              placeholder={ '请输入' }
+              placeholderTextColor={ '#ffffff' }/>
           </View>
           <View
             style={{
@@ -81,10 +91,11 @@ export default class LoginPage extends Component {
             }}>
             <Image
               style={{
-                width: 21,
-                height: 21
+                width: 16,
+                height: 19.5,
+                marginLeft: 2.5
               }}
-              source={require('../resource/welcome-background.jpg')}/>
+              source={ require('../resource/icon-password.jpg') }/>
             <TextInput
               style={{
                 width: 186,
@@ -94,11 +105,11 @@ export default class LoginPage extends Component {
                 color: '#ffffff',
                 marginTop: 3
               }}
-              secureTextEntry={true}
-              caretHidden={true}
-              multiline={false}
-              placeholder={'请输入'}
-              placeholderTextColor={'#ffffff'}/>
+              secureTextEntry={ true }
+              caretHidden={ false }
+              multiline={ false }
+              placeholder={ '请输入' }
+              placeholderTextColor={ '#ffffff' }/>
           </View>
           <View
             style={{
@@ -107,7 +118,7 @@ export default class LoginPage extends Component {
               backgroundColor: 'rgba(255, 255, 255, 0.8)'
             }}/>
           <TouchableWithoutFeedback
-            onPress={this.login.bind(this)}>
+            onPress={ this.login.bind(this) }>
             <View
               style={{
                 width: 290,
@@ -126,7 +137,8 @@ export default class LoginPage extends Component {
                 }}>登录</Text>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={ this.setPassword.bind(this) }>
             <View
               style={{
                 marginTop: 13,
