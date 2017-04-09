@@ -14,8 +14,13 @@ export default class SetPasswordPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      nextEnable: true
+      nextEnable: true,
+      verifyEnable: true
     }
+  }
+
+  verify() {
+
   }
 
   next() {
@@ -110,24 +115,50 @@ export default class SetPasswordPage extends Component {
                     fontSize: 17,
                     color: '#ffffff'
                   }}>验证码</Text>
-                <TextInput
+                <View
                   style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                     width: 160,
-                    fontFamily: 'ArialMT',
-                    fontSize: 16,
-                    color: '#ffffff',
-                    marginTop: 3
-                  }}
-                  caretHidden={ false }
-                  multiline={ false }
-                  keyboardType={ 'numeric' }
-                  placeholder={ '请输入验证码' }
-                  placeholderTextColor={ 'rgba(255, 255, 255, 0.6)' }/>
+                    marginTop: -2
+                  }}>
+                  <TextInput
+                    style={{
+                      width: 96,
+                      fontFamily: 'ArialMT',
+                      fontSize: 16,
+                      color: '#ffffff'
+                    }}
+                    caretHidden={ false }
+                    multiline={ false }
+                    keyboardType={ 'numeric' }
+                    placeholder={ '请输入验证码' }
+                    placeholderTextColor={ 'rgba(255, 255, 255, 0.6)' }/>
+                  <TouchableWithoutFeedback
+                    onPress={ this.verify.bind(this) }>
+                    <View
+                      style={{
+                        width: 50,
+                        height: 30,
+                        backgroundColor: this.state.verifyEnable ? 'rgba(179, 214, 110, 1)' : 'rgba(225, 225, 225, 1)',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        justifyContent: 'center'
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'ArialMT',
+                          fontSize: 12,
+                          color: this.state.verifyEnable ? '#ffffff' : '#333333'
+                        }}>获取</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
               </View>
               <View
                 style={{
                   height: 1,
-                  marginTop: 10,
+                  marginTop: 6,
                   backgroundColor: 'rgba(255, 255, 255, 0.8)'
                 }}/>
               <View
