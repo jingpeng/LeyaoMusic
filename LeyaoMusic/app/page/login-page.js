@@ -35,6 +35,10 @@ export default class LoginPage extends Component {
     Actions.set_password()
   }
 
+  register() {
+    Actions.register_one()
+  }
+
   render() {
     return (
       <Image
@@ -159,7 +163,8 @@ export default class LoginPage extends Component {
               </View>
             </TouchableWithoutFeedback>
           </View>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={ this.register.bind(this) }>
             <View
               style={{
                 marginBottom: 22,

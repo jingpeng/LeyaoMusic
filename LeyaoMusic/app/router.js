@@ -9,6 +9,7 @@ import WelcomePage from './page/welcome-page';
 import GuidePage from './page/guide-page';
 import LoginPage from './page/login-page';
 import SetPasswordPage from './page/set-password-page';
+import RegisterOnePage from './page/register-one-page';
 
 export default class AppRouter extends Component {
   render() {
@@ -36,5 +37,9 @@ const scenes = Actions.create(
       key="set_password"
       hideNavBar={ true }
       component={ SetPasswordPage }/>
+    <Scene
+      key="register_one"
+      hideNavBar={ true }
+      component={ RegisterOnePage }/>
   </Scene>
 );
