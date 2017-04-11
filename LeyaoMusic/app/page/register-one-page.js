@@ -8,6 +8,9 @@ import {
   TouchableWithoutFeedback,
   View
 } from 'react-native';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 export default class RegisterOnePage extends Component {
 
@@ -19,16 +22,20 @@ export default class RegisterOnePage extends Component {
     }
   }
 
+  back() {
+    Actions.pop()
+  }
+
   verify() {
 
   }
 
   next() {
-
+    Actions.register_two()
   }
 
   agreement() {
-    
+
   }
 
   render() {
@@ -49,15 +56,38 @@ export default class RegisterOnePage extends Component {
             width: Dimensions.get('window').width,
             height: 44,
             flexDirection: 'row',
-            justifyContent: 'center',
+            justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-          <Text
+          <View
             style={{
-              fontFamily: 'ArialMT',
-              fontSize: 18,
-              color: '#ffffff'
-            }}>注册</Text>
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 18,
+                color: '#ffffff'
+              }}>注册</Text>
+          </View>
+          <TouchableWithoutFeedback
+            onPress={ this.back.bind(this) }>
+            <View
+              style={{
+                position: 'absolute'
+              }}>
+              <Image
+                source={ require('../resource/arrow.jpg') }
+                style={{
+                  width: 10,
+                  height: 19.5,
+                  marginLeft: 10
+                }}/>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
         <KeyboardAvoidingView
           behavior={'padding'}
