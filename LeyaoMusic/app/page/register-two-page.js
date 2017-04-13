@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  ActionSheetIOS,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -11,6 +12,13 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+
+const choosePictureOption = [
+  '拍照',
+  '从手机相册选择',
+  '取消'
+]
+const CHOOSE_PICTURE_OPTION_CANCEL_INDEX = 2
 
 export default class RegisterTwoPage extends Component {
 
@@ -25,6 +33,16 @@ export default class RegisterTwoPage extends Component {
 
   back() {
     Actions.pop()
+  }
+
+  choosePicture() {
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: choosePictureOption,
+      cancelButtonIndex: CHOOSE_PICTURE_OPTION_CANCEL_INDEX
+    },
+    (buttonIndex) => {
+
+    })
   }
 
   checkMale() {
@@ -114,15 +132,18 @@ export default class RegisterTwoPage extends Component {
               justifyContent: 'center',
               alignItems: 'center'
             }}>
-            <Image
-              source={ require('../resource/default-avatar.png') }
-              style={{
-                width: 75,
-                height: 74.5,
-                marginTop: 30,
-                alignSelf: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-              }}/>
+            <TouchableWithoutFeedback
+              onPress={this.choosePicture.bind(this)}>
+              <Image
+                source={ require('../resource/default-avatar.png') }
+                style={{
+                  width: 75,
+                  height: 74.5,
+                  marginTop: 30,
+                  alignSelf: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0)',
+                }}/>
+            </TouchableWithoutFeedback>
             <View
               style={{
                 width: 252,
