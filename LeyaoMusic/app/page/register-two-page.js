@@ -12,6 +12,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import ImagePicker from 'react-native-image-picker';
 
 const choosePictureOption = [
   '拍照',
@@ -19,6 +20,15 @@ const choosePictureOption = [
   '取消'
 ]
 const CHOOSE_PICTURE_OPTION_CANCEL_INDEX = 2
+
+const options = {
+  mediaType: 'photo', // 'photo' or 'video'
+  videoQuality: 'high', // 'low', 'medium', or 'high'
+  durationLimit: 10, // video recording max time in seconds
+  maxWidth: 100, // photos only默认为手机屏幕的宽，高与宽一样，为正方形照片
+  maxHeight: 100, // photos only
+  allowsEditing: true, // 当用户选择过照片之后是否允许再次编辑图片
+};
 
 export default class RegisterTwoPage extends Component {
 
@@ -41,7 +51,18 @@ export default class RegisterTwoPage extends Component {
       cancelButtonIndex: CHOOSE_PICTURE_OPTION_CANCEL_INDEX
     },
     (buttonIndex) => {
+      switch (buttonIndex) {
+        case 0:
+          ImagePicker.launchCamera(options, (response)  => {
 
+          });
+          break;
+        case 1:
+          ImagePicker.launchImageLibrary(options, (response)  => {
+
+          });
+          break;
+      }
     })
   }
 
