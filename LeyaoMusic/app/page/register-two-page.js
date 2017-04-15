@@ -156,7 +156,7 @@ export default class RegisterTwoPage extends Component {
             <TouchableWithoutFeedback
               onPress={this.choosePicture.bind(this)}>
               <Image
-                source={ require('../resource/default-avatar.png') }
+                source={ require('../resource/upload-avatar.png') }
                 style={{
                   width: 75,
                   height: 74.5,
