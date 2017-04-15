@@ -28,6 +28,7 @@ export default class LoginPage extends Component {
       this.setState({
         loginEnable: !this.state.loginEnable
       })
+      Actions.main()
     }
   }
 
