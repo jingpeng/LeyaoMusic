@@ -15,6 +15,7 @@ import HomePage from './page/home-page';
 import SightsingPage from './page/sightsing-page';
 import EarTrainingPage from './page/ear-training-page';
 import ProfilePage from './page/profile-page';
+import NotificationPage from './page/notification-page';
 
 import TabIconWidget from './widget/tab-icon-widget'
 
@@ -97,5 +98,9 @@ const scenes = Actions.create(
         unSelectedColor='rgba(255, 255, 255, 1)'
         hideDivider={ true }/>
     </Scene>
+    <Scene
+      key="notification"
+      hideNavBar={ true }
+      component={ NotificationPage }/>
   </Scene>
 );

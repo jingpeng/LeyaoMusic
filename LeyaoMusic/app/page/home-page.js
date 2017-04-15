@@ -3,10 +3,18 @@ import {
   Dimensions,
   Image,
   Text,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 export default class HomePage extends Component {
+
+  notification() {
+    Actions.notification()
+  }
 
   render() {
     return (
@@ -20,15 +28,18 @@ export default class HomePage extends Component {
           height: null,
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
-        <Image
-          source={ require('../resource/chat.png') }
-          style={{
-            position: 'absolute',
-            width: 18.5,
-            height: 18.5,
-            right: 10,
-            top: 32
-          }}/>
+        <TouchableWithoutFeedback
+          onPress={ this.notification.bind(this) }>
+          <Image
+            source={ require('../resource/chat.png') }
+            style={{
+              position: 'absolute',
+              width: 18.5,
+              height: 18.5,
+              right: 10,
+              top: 32
+            }}/>
+        </TouchableWithoutFeedback>
         <Image
           source={ require('../resource/central-divider.png') }
           style={{
