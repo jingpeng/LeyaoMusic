@@ -94,7 +94,8 @@ const scenes = Actions.create(
         selectedIcon={ require('./resource/profile-selected.png') }
         unSelectedIcon={ require('./resource/profile-unselected.png') }
         selectedColor='#b3d66e'
-        unSelectedColor='rgba(255, 255, 255, 1)'/>
+        unSelectedColor='rgba(255, 255, 255, 1)'
+        hideDivider={ true }/>
     </Scene>
   </Scene>
 );

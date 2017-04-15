@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   Image,
-  StyleSheet,
   Text,
   View
 } from 'react-native';
@@ -19,7 +18,8 @@ export default class TabIconWidget extends Component {
       <View
         style={{
           flex: 1,
-          flexDirection: 'row'
+          flexDirection: 'row',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)'
         }}>
         <View
           style={{
@@ -46,6 +46,20 @@ export default class TabIconWidget extends Component {
                 fontSize: 10
               }}>{this.props.title}</Text>
           </View>
+          {
+             this.props.hideDivider ? (
+               null
+             ) : (
+               <Image
+                 source={ require('../resource/tab-divider.png') }
+                 style={{
+                   position: 'absolute',
+                   width: 1,
+                   height: 20,
+                   right: 0
+                 }}/>
+             )
+          }
         </View>
       </View>
     );
