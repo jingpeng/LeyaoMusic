@@ -16,6 +16,10 @@ export default class SightsingPage extends Component {
     Actions.stave_introduction()
   }
 
+  noteDuration() {
+    Actions.note_duration()
+  }
+
   render() {
     return (
       <Image
@@ -73,28 +77,31 @@ export default class SightsingPage extends Component {
             marginTop: 11,
             marginLeft: 11
           }}/>
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 14
-          }}>
-          <Image
-            source={ require('../resource/note-duration.png') }
+        <TouchableWithoutFeedback
+          onPress={ this.noteDuration.bind(this) }>
+          <View
             style={{
-              width: 18.5,
-              height: 16,
-              marginLeft: 10
-            }}/>
-          <Text
-            style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              color: '#ffffff',
-              marginLeft: 15
-            }}>音符时值（持续时间长短）</Text>
-        </View>
+              width: Dimensions.get('window').width,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 14
+            }}>
+            <Image
+              source={ require('../resource/note-duration.png') }
+              style={{
+                width: 18.5,
+                height: 16,
+                marginLeft: 10
+              }}/>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                color: '#ffffff',
+                marginLeft: 15
+              }}>音符时值（持续时间长短）</Text>
+          </View>
+        </TouchableWithoutFeedback>
         <Image
           source={ require('../resource/sightsing-divider.png') }
           style={{

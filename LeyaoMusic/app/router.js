@@ -17,6 +17,7 @@ import EarTrainingPage from './page/ear-training-page';
 import ProfilePage from './page/profile-page';
 import NotificationPage from './page/notification-page';
 import StaveIntroductionPage from './page/stave-introduction-page';
+import NoteDurationPage from './page/note-duration-page';
 
 import TabIconWidget from './widget/tab-icon-widget'
 
@@ -107,5 +108,9 @@ const scenes = Actions.create(
       key="stave_introduction"
       hideNavBar={ true }
       component={ StaveIntroductionPage }/>
+    <Scene
+      key="note_duration"
+      hideNavBar={ true }
+      component={ NoteDurationPage }/>
   </Scene>
 );
