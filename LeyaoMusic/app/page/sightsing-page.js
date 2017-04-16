@@ -3,10 +3,18 @@ import {
   Dimensions,
   Image,
   Text,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 export default class SightsingPage extends Component {
+
+  staveIntroduce() {
+    Actions.stave_introduction()
+  }
 
   render() {
     return (
@@ -32,28 +40,31 @@ export default class SightsingPage extends Component {
               color: '#ffffff'
             }}>视唱</Text>
         </View>
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 10
-          }}>
-          <Image
-            source={ require('../resource/stave.png') }
+        <TouchableWithoutFeedback
+          onPress={ this.staveIntroduce.bind(this) }>
+          <View
             style={{
-              width: 20.5,
-              height: 14.5,
-              marginLeft: 10
-            }}/>
-          <Text
-            style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              color: '#ffffff',
-              marginLeft: 15
-            }}>五线谱介绍，谱号，加线</Text>
-        </View>
+              width: Dimensions.get('window').width,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 10
+            }}>
+            <Image
+              source={ require('../resource/stave.png') }
+              style={{
+                width: 20.5,
+                height: 14.5,
+                marginLeft: 10
+              }}/>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                color: '#ffffff',
+                marginLeft: 15
+              }}>五线谱介绍，谱号，加线</Text>
+          </View>
+        </TouchableWithoutFeedback>
         <Image
           source={ require('../resource/sightsing-divider.png') }
           style={{

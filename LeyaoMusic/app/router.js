@@ -16,6 +16,7 @@ import SightsingPage from './page/sightsing-page';
 import EarTrainingPage from './page/ear-training-page';
 import ProfilePage from './page/profile-page';
 import NotificationPage from './page/notification-page';
+import StaveIntroductionPage from './page/stave-introduction-page';
 
 import TabIconWidget from './widget/tab-icon-widget'
 
@@ -102,5 +103,9 @@ const scenes = Actions.create(
       key="notification"
       hideNavBar={ true }
       component={ NotificationPage }/>
+    <Scene
+      key="stave_introduction"
+      hideNavBar={ true }
+      component={ StaveIntroductionPage }/>
   </Scene>
 );
