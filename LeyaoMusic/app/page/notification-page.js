@@ -3,6 +3,7 @@ import {
   Dimensions,
   Image,
   ListView,
+  RefreshControl,
   Text,
   TouchableWithoutFeedback,
   View
@@ -18,11 +19,18 @@ export default class NotificationPage extends Component {
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     this.state = {
       dataSource: ds.cloneWithRows(['row 1', 'row 2']),
+      refreshing: false
     }
   }
 
   back() {
     Actions.pop()
+  }
+
+  onRefresh() {
+    this.setState({
+      refreshing: true
+    })
   }
 
   render() {
@@ -77,6 +85,15 @@ export default class NotificationPage extends Component {
         </View>
         <ListView
           dataSource={ this.state.dataSource }
+          refreshControl={
+            <RefreshControl
+              refreshing={ this.state.refreshing }
+              onRefresh={this.onRefresh.bind(this)}
+              tintColor="#cccccc"
+              title="正在加载中..."
+              titleColor="#ffffff"
+              colors={ ['#cccccc', '#777777'] }/>
+          }
           renderRow={ (rowData) =>
             <View
               style={{
