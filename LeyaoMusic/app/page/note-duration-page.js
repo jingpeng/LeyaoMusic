@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {
   Dimensions,
   Image,
+  ScrollView,
   Text,
   TouchableWithoutFeedback,
   View
@@ -66,31 +67,207 @@ export default class NoteDurationPage extends Component {
             </View>
           </TouchableWithoutFeedback>
         </View>
-        <View
-          style={{
-            width: Dimensions.get('window').width - 60,
-            marginTop: 16
-          }}>
+        <ScrollView
+          showsVerticalScrollIndicator={ false }>
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center'
+              width: Dimensions.get('window').width - 60,
+              alignSelf: 'center',
+              marginTop: 16
             }}>
-            <Image
-              source={ require('../resource/dot.png') }
+            <View
               style={{
-                width: 12,
-                height: 12
-              }}/>
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}>
+              <Image
+                source={ require('../resource/dot.png') }
+                style={{
+                  width: 12,
+                  height: 12
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  marginLeft: 20,
+                  color: '#ffffff'
+                }}>一个音符演奏的时间长度被称为它的音符时值，</Text>
+            </View>
             <Text
               style={{
                 fontFamily: 'ArialMT',
                 fontSize: 13,
-                marginLeft: 20,
+                marginLeft: 32,
+                marginTop: 4,
                 color: '#ffffff'
-              }}>一个音符演奏的时间长度被称为它的音符时值，</Text>
+              }}>它是由音符的类型决定的。</Text>
+            <Image
+              source={ require('../resource/note-duration-1.png') }
+              style={{
+                width: 240.5,
+                height: 35,
+                alignSelf: 'center',
+                marginTop: 12
+              }}/>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 16
+              }}>
+              <Image
+                source={ require('../resource/dot.png') }
+                style={{
+                  width: 12,
+                  height: 12
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  marginLeft: 20,
+                  color: '#ffffff'
+                }}>全音符在现代音乐中是最长的音符时值。</Text>
+            </View>
+            <Image
+              source={ require('../resource/note-duration-2.png') }
+              style={{
+                width: 240.5,
+                height: 35,
+                alignSelf: 'center',
+                marginTop: 12
+              }}/>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 16
+              }}>
+              <Image
+                source={ require('../resource/dot.png') }
+                style={{
+                  width: 12,
+                  height: 12
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  marginLeft: 20,
+                  color: '#ffffff'
+                }}>二分音符具有全音符一半的时值。</Text>
+            </View>
+            <Image
+              source={ require('../resource/note-duration-3.png') }
+              style={{
+                width: 240.5,
+                height: 35,
+                alignSelf: 'center',
+                marginTop: 12
+              }}/>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 16
+              }}>
+              <Image
+                source={ require('../resource/dot.png') }
+                style={{
+                  width: 12,
+                  height: 12
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  marginLeft: 20,
+                  color: '#ffffff'
+                }}>两个二分音符的时值相当于一个全音符的时值。</Text>
+            </View>
+            <Image
+              source={ require('../resource/note-duration-4.png') }
+              style={{
+                width: 121,
+                height: 60,
+                alignSelf: 'center',
+                marginTop: 12
+              }}/>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 16
+              }}>
+              <Image
+                source={ require('../resource/dot.png') }
+                style={{
+                  width: 12,
+                  height: 12
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  marginLeft: 20,
+                  color: '#ffffff'
+                }}>一个音符演奏的时间长度被称为它的音符时值，</Text>
+            </View>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                marginLeft: 32,
+                marginTop: 4,
+                color: '#ffffff'
+              }}>它是由音符的类型决定的。</Text>
+            <Image
+              source={ require('../resource/note-duration-5.png') }
+              style={{
+                width: 240.5,
+                height: 35,
+                alignSelf: 'center',
+                marginTop: 12
+              }}/>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 16
+              }}>
+              <Image
+                source={ require('../resource/dot.png') }
+                style={{
+                  width: 12,
+                  height: 12
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  marginLeft: 20,
+                  color: '#ffffff'
+                }}>一个音符演奏的时间长度被称为它的音符时值，</Text>
+            </View>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                marginLeft: 32,
+                marginTop: 4,
+                color: '#ffffff'
+              }}>它是由音符的类型决定的。</Text>
+            <Image
+              source={ require('../resource/note-duration-6.png') }
+              style={{
+                width: 211.5,
+                height: 113.5,
+                alignSelf: 'center',
+                marginTop: 12
+              }}/>
           </View>
-        </View>
+        </ScrollView>
       </Image>
     );
   }
