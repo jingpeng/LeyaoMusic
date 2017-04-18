@@ -12,26 +12,116 @@ import {
   Actions
 } from 'react-native-router-flux';
 
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
+
 export default class RegisterOnePage extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      nextEnable: true,
-      verifyEnable: true
+      nextEnable: false,
+      verifyEnable: true,
+
+      phoneValidate: false,
+      verifyValidate: false,
+      passwordValidate: false,
+      confirmPasswordValidate: false,
+
+      phone: '',
+      password: '',
+      code: ''
     }
+    this.checkNext.bind(this)
   }
 
   back() {
     Actions.pop()
   }
 
-  verify() {
+  phoneOnChange(text) {
+    if(text.length == 0){
+      this.setState({ phoneValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ phoneValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      phone: text
+    })
+  }
 
+  verifyOnChange(text) {
+    if(text.length == 0){
+      this.setState({ verifyValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ verifyValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      code: text
+    })
+  }
+
+  passwordOnChange(text) {
+    if(text.length == 0){
+      this.setState({ passwordValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ passwordValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      password: text
+    })
+  }
+
+  confirmPasswordOnChange(text) {
+    if(text.length == 0){
+      this.setState({ confirmPasswordValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ confirmPasswordValidate: true }, () => { this.checkNext() })
+    }
+  }
+
+  checkNext() {
+    if(this.state.phoneValidate &&
+      this.state.verifyValidate &&
+      this.state.passwordValidate &&
+      this.state.confirmPasswordValidate) {
+      this.setState({ nextEnable: true })
+    } else {
+      this.setState({ nextEnable: false })
+    }
+  }
+
+  verify() {
+    APIClient.access(APIInterface.getVerifyCode(this.state.phone))
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+          
+        } else {
+          alert(json.errorCode)
+        }
+      })
   }
 
   next() {
-    Actions.register_two()
+    if(this.state.nextEnable) {
+      APIClient.access(APIInterface.register(this.state.phone, this.state.password, this.state.code))
+        .then((response) => {
+          return response.json()
+        })
+        .then((json) => {
+          console.log(json)
+
+          if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+            Actions.register_two()
+          } else {
+            alert(json.errorCode)
+          }
+        })
+    }
   }
 
   agreement() {
@@ -117,6 +207,7 @@ export default class RegisterOnePage extends Component {
                     color: '#ffffff'
                   }}>手机号</Text>
                 <TextInput
+                  onChangeText = { this.phoneOnChange.bind(this) }
                   style={{
                     width: 160,
                     fontFamily: 'ArialMT',
@@ -157,6 +248,7 @@ export default class RegisterOnePage extends Component {
                     marginTop: -2
                   }}>
                   <TextInput
+                    onChangeText = { this.verifyOnChange.bind(this) }
                     style={{
                       width: 96,
                       fontFamily: 'ArialMT',
@@ -209,6 +301,7 @@ export default class RegisterOnePage extends Component {
                     color: '#ffffff'
                   }}>密码</Text>
                 <TextInput
+                  onChangeText = { this.passwordOnChange.bind(this) }
                   style={{
                     width: 160,
                     fontFamily: 'ArialMT',
@@ -242,6 +335,7 @@ export default class RegisterOnePage extends Component {
                     color: '#ffffff'
                   }}>确认密码</Text>
                 <TextInput
+                  onChangeText = { this.confirmPasswordOnChange.bind(this) }
                   style={{
                     width: 160,
                     fontFamily: 'ArialMT',
