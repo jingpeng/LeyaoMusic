@@ -31,8 +31,10 @@ export default class RegisterOnePage extends Component {
 
       phone: '',
       password: '',
-      code: ''
+      code: '',
+      confirmCode: ''
     }
+    this.validateParam.bind(this)
     this.checkNext.bind(this)
   }
 
@@ -79,6 +81,9 @@ export default class RegisterOnePage extends Component {
     } else {
       this.setState({ confirmPasswordValidate: true }, () => { this.checkNext() })
     }
+    this.setState({
+      confirmCode: text
+    })
   }
 
   checkNext() {
@@ -99,15 +104,30 @@ export default class RegisterOnePage extends Component {
       })
       .then((json) => {
         if(json.callStatus == APIConstant.STATUS_SUCCEED) {
-          
+
         } else {
           alert(json.errorCode)
         }
       })
   }
 
+  validateParam() {
+    // 目前只校验密码一致性
+    if(this.state.code != this.state.confirmCode) {
+      alert('密码不一致')
+      return false
+    }
+
+    return true
+  }
+
   next() {
     if(this.state.nextEnable) {
+
+      if(!this.validateParam()) {
+        return
+      }
+
       APIClient.access(APIInterface.register(this.state.phone, this.state.password, this.state.code))
         .then((response) => {
           return response.json()

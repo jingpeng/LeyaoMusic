@@ -10,9 +10,13 @@ export default class APIInterface {
   }
 
   static register(username, password, code) {
-    return BaseRequest.post(APIConstant.BASE_URL + '/user/register?'
-      + 'username=' + username
-      + '&password=' + password
-      + '&code=' + code, {}, {})
+    return BaseRequest.post(APIConstant.BASE_URL + '/user/register', {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }, {
+      'username': username,
+      'password': password,
+      'code': code
+    })
   }
 }
