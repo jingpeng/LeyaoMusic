@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   ActionSheetIOS,
+  ActivityIndicator,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -35,6 +36,7 @@ export default class RegisterTwoPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      indicating: true,
       maleChecked: false,
       femaleChecked: false,
       nextEnable: true
@@ -42,7 +44,7 @@ export default class RegisterTwoPage extends Component {
   }
 
   back() {
-    Actions.pop()
+    Actions.popTo('login')
   }
 
   choosePicture() {
@@ -104,6 +106,14 @@ export default class RegisterTwoPage extends Component {
           height: null,
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
+        <ActivityIndicator
+          animating={ this.state.indicating }
+          style={{
+            position: 'absolute',
+            top: (Dimensions.get('window').height - 80) / 2,
+            height: 80
+          }}
+          size="large"/>
         <View
           style={{
             marginTop: 20,
