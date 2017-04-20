@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   ActionSheetIOS,
+  AsyncStorage,
   ActivityIndicator,
   Dimensions,
   Image,
@@ -14,6 +15,11 @@ import {
   Actions
 } from 'react-native-router-flux';
 import ImagePicker from 'react-native-image-picker';
+
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
+import StorageConstant from '../service/storage-constant';
 
 const choosePictureOption = [
   '拍照',
@@ -36,7 +42,7 @@ export default class RegisterTwoPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      indicating: true,
+      indicating: false,
       maleChecked: false,
       femaleChecked: false,
       nextEnable: true
@@ -55,13 +61,42 @@ export default class RegisterTwoPage extends Component {
     (buttonIndex) => {
       switch (buttonIndex) {
         case 0:
-          ImagePicker.launchCamera(options, (response)  => {
+          ImagePicker.launchCamera(options, (response) => {
 
           });
           break;
         case 1:
-          ImagePicker.launchImageLibrary(options, (response)  => {
+          ImagePicker.launchImageLibrary(options, (response) => {
+            // 获取存储的登陆token
+            copy = this
+            copy.setState({ indicating: true})
 
+            AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+              copy.setState({ indicating: false})
+
+              if (error) {
+                console.log(error);
+              }
+              if (!error) {
+                copy.setState({ indicating: true})
+                APIClient.access(APIInterface.upload(result, response.fileName, response.data))
+                  .then((response) => {
+                    copy.setState({ indicating: false})
+                    console.log(response)
+                    return response.json()
+                  })
+                  .then((json) => {
+                    console.log(json)
+                    if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                    } else {
+                      alert(json.errorCode)
+                    }
+                  })
+                  .catch((error) => {
+                    copy.setState({ indicating: false})
+                  })
+              }
+            });
           });
           break;
       }

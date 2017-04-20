@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import {
+  ActivityIndicator,
+  AsyncStorage,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -15,12 +17,14 @@ import {
 import APIClient from '../service/api-client';
 import APIInterface from '../service/api-interface';
 import APIConstant from '../service/api-constant';
+import StorageConstant from '../service/storage-constant';
 
 export default class RegisterOnePage extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      indicating: false,
       nextEnable: false,
       verifyEnable: true,
 
@@ -32,10 +36,11 @@ export default class RegisterOnePage extends Component {
       phone: '',
       password: '',
       code: '',
-      confirmCode: ''
+      confirmPassword: ''
     }
     this.validateParam.bind(this)
     this.checkNext.bind(this)
+    this.next.bind(this)
   }
 
   back() {
@@ -82,7 +87,7 @@ export default class RegisterOnePage extends Component {
       this.setState({ confirmPasswordValidate: true }, () => { this.checkNext() })
     }
     this.setState({
-      confirmCode: text
+      confirmPassword: text
     })
   }
 
@@ -104,7 +109,7 @@ export default class RegisterOnePage extends Component {
       })
       .then((json) => {
         if(json.callStatus == APIConstant.STATUS_SUCCEED) {
-
+          alert(json.errorCode)
         } else {
           alert(json.errorCode)
         }
@@ -113,7 +118,7 @@ export default class RegisterOnePage extends Component {
 
   validateParam() {
     // 目前只校验密码一致性
-    if(this.state.code != this.state.confirmCode) {
+    if(this.state.password != this.state.confirmPassword) {
       alert('密码不一致')
       return false
     }
@@ -128,18 +133,56 @@ export default class RegisterOnePage extends Component {
         return
       }
 
+      this.setState({ indicating: true})
+
+      // 进行注册操作
       APIClient.access(APIInterface.register(this.state.phone, this.state.password, this.state.code))
         .then((response) => {
+          this.setState({ indicating: false})
           return response.json()
         })
         .then((json) => {
           console.log(json)
-
           if(json.callStatus == APIConstant.STATUS_SUCCEED) {
-            Actions.register_two()
+
+            this.setState({ indicating: true})
+
+            // 进行登陆操作
+            APIClient.access(APIInterface.login(this.state.phone, this.state.password))
+              .then((response) => {
+                this.setState({ indicating: false})
+                return response.json()
+              })
+              .then((json) => {
+                console.log(json)
+                if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                  // 存储登陆token
+                  copy = this
+                  copy.setState({ indicating: true})
+                  AsyncStorage.setItem(StorageConstant.TOKEN, json.token, function(error) {
+                    copy.setState({ indicating: false})
+
+                    if (error) {
+                      console.log(error);
+                    }
+                    if (!error) {
+                      Actions.register_two()
+                    }
+                  });
+
+                } else {
+                  alert(json.errorCode)
+                }
+              })
+              .catch((error) => {
+                this.setState({ indicating: false})
+              })
           } else {
             alert(json.errorCode)
           }
+        })
+        .catch((error) => {
+          this.setState({ indicating: false})
         })
     }
   }
@@ -160,6 +203,14 @@ export default class RegisterOnePage extends Component {
           height: null,
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
+        <ActivityIndicator
+          animating={ this.state.indicating }
+          style={{
+            position: 'absolute',
+            top: (Dimensions.get('window').height - 80) / 2,
+            height: 80
+          }}
+          size="large"/>
         <View
           style={{
             marginTop: 20,
