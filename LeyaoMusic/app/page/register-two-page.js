@@ -70,7 +70,6 @@ export default class RegisterTwoPage extends Component {
             // 获取存储的登陆token
             copy = this
             copy.setState({ indicating: true})
-
             AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
               copy.setState({ indicating: false})
 
@@ -78,11 +77,11 @@ export default class RegisterTwoPage extends Component {
                 console.log(error);
               }
               if (!error) {
+                // 上传文件
                 copy.setState({ indicating: true})
                 APIClient.access(APIInterface.upload(result, response.fileName, response.data))
                   .then((response) => {
                     copy.setState({ indicating: false})
-                    console.log(response)
                     return response.json()
                   })
                   .then((json) => {
@@ -94,6 +93,7 @@ export default class RegisterTwoPage extends Component {
                   })
                   .catch((error) => {
                     copy.setState({ indicating: false})
+                    console.log(error)
                   })
               }
             });

@@ -103,16 +103,23 @@ export default class RegisterOnePage extends Component {
   }
 
   verify() {
+    this.setState({ indicating: true})
     APIClient.access(APIInterface.getVerifyCode(this.state.phone))
       .then((response) => {
+        this.setState({ indicating: false})
         return response.json()
       })
       .then((json) => {
+        console.log(json)
         if(json.callStatus == APIConstant.STATUS_SUCCEED) {
           alert(json.errorCode)
         } else {
           alert(json.errorCode)
         }
+      })
+      .catch((error) => {
+        this.setState({ indicating: false})
+        console.log(error)
       })
   }
 
@@ -128,14 +135,13 @@ export default class RegisterOnePage extends Component {
 
   next() {
     if(this.state.nextEnable) {
-
+      // 进行UI参数校验
       if(!this.validateParam()) {
         return
       }
 
-      this.setState({ indicating: true})
-
       // 进行注册操作
+      this.setState({ indicating: true})
       APIClient.access(APIInterface.register(this.state.phone, this.state.password, this.state.code))
         .then((response) => {
           this.setState({ indicating: false})
@@ -145,9 +151,8 @@ export default class RegisterOnePage extends Component {
           console.log(json)
           if(json.callStatus == APIConstant.STATUS_SUCCEED) {
 
-            this.setState({ indicating: true})
-
             // 进行登陆操作
+            this.setState({ indicating: true})
             APIClient.access(APIInterface.login(this.state.phone, this.state.password))
               .then((response) => {
                 this.setState({ indicating: false})
@@ -161,9 +166,8 @@ export default class RegisterOnePage extends Component {
                   copy.setState({ indicating: true})
                   AsyncStorage.setItem(StorageConstant.TOKEN, json.token, function(error) {
                     copy.setState({ indicating: false})
-
                     if (error) {
-                      console.log(error);
+                      console.log(error)
                     }
                     if (!error) {
                       Actions.register_two()
@@ -176,6 +180,7 @@ export default class RegisterOnePage extends Component {
               })
               .catch((error) => {
                 this.setState({ indicating: false})
+                console.log(error);
               })
           } else {
             alert(json.errorCode)
@@ -183,6 +188,7 @@ export default class RegisterOnePage extends Component {
         })
         .catch((error) => {
           this.setState({ indicating: false})
+          console.log(error)
         })
     }
   }
