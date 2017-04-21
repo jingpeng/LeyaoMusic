@@ -43,9 +43,16 @@ export default class RegisterTwoPage extends Component {
     super(props)
     this.state = {
       indicating: false,
+      nameValidate: false,
       maleChecked: false,
       femaleChecked: false,
-      nextEnable: true
+      nextEnable: false,
+
+      // 用来显示到avatar的state变量
+      avatar: "",
+      // 用来存储上传成功后的文件名
+      data: "",
+      name: ""
     }
   }
 
@@ -67,6 +74,9 @@ export default class RegisterTwoPage extends Component {
           break;
         case 1:
           ImagePicker.launchImageLibrary(options, (response) => {
+            if(response.didCancel) {
+              return
+            }
             // 获取存储的登陆token
             copy = this
             copy.setState({ indicating: true})
@@ -87,6 +97,10 @@ export default class RegisterTwoPage extends Component {
                   .then((json) => {
                     console.log(json)
                     if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                      copy.setState({
+                        avatar: response.data,
+                        data: json.data
+                      })
                     } else {
                       alert(json.errorCode)
                     }
@@ -100,6 +114,17 @@ export default class RegisterTwoPage extends Component {
           });
           break;
       }
+    })
+  }
+
+  nameOnChange(text) {
+    if(text.length == 0){
+      this.setState({ nameValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ nameValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      name: text
     })
   }
 
@@ -125,11 +150,53 @@ export default class RegisterTwoPage extends Component {
     })
   }
 
-  next() {
+  checkNext() {
+    if(this.state.nameValidate) {
+      this.setState({ nextEnable: true })
+    } else {
+      this.setState({ nextEnable: false })
+    }
+  }
 
+  next() {
+    if(this.state.nextEnable) {
+      // 获取存储的登陆token
+      copy = this
+      copy.setState({ indicating: true})
+      AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+        copy.setState({ indicating: false})
+
+        if (error) {
+          console.log(error);
+        }
+        if (!error) {
+          // 完善个人信息
+          copy.setState({ indicating: true})
+          APIClient.access(APIInterface.updateUser(result, copy.state.name, copy.state.data, ""))
+            .then((response) => {
+              copy.setState({ indicating: false})
+              return response.json()
+            })
+            .then((json) => {
+              console.log(json)
+              if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                Actions.popTo('login')
+              } else {
+                alert(json.errorCode)
+              }
+            })
+            .catch((error) => {
+              copy.setState({ indicating: false})
+              console.log(error)
+            })
+        }
+      })
+    }
   }
 
   render() {
+    var avatar = (this.state.avatar == "") ? require('../resource/upload-avatar.png') : { uri: "data:image/jpg;base64," + this.state.avatar }
+
     return (
       <Image
         source={ require('../resource/pure-background.jpg') }
@@ -201,13 +268,14 @@ export default class RegisterTwoPage extends Component {
             <TouchableWithoutFeedback
               onPress={this.choosePicture.bind(this)}>
               <Image
-                source={ require('../resource/upload-avatar.png') }
+                source={ avatar }
                 style={{
                   width: 75,
-                  height: 74.5,
+                  height: 75,
                   marginTop: 30,
                   alignSelf: 'center',
                   backgroundColor: 'rgba(0, 0, 0, 0)',
+                  borderRadius: 37.5
                 }}/>
             </TouchableWithoutFeedback>
             <View
@@ -229,6 +297,7 @@ export default class RegisterTwoPage extends Component {
                     color: '#ffffff'
                   }}>姓名</Text>
                 <TextInput
+                  onChangeText = { this.nameOnChange.bind(this) }
                   style={{
                     width: 188,
                     fontFamily: 'ArialMT',

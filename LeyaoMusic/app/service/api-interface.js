@@ -48,4 +48,16 @@ export default class APIInterface {
       'base64': base64
     })
   }
+
+  static updateUser(token, realname, pic, friends) {
+    return BaseRequest.post(APIConstant.BASE_URL + '/user/updateUser', {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'token': token
+    }, {
+      'realname': realname,
+      'pic': pic,
+      'friends': friends
+    })
+  }
 }
