@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  AsyncStorage,
   Image,
   KeyboardAvoidingView,
   View,
@@ -12,12 +13,53 @@ import {
   ActionConst
 } from 'react-native-router-flux';
 
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
+import StorageConstant from '../service/storage-constant';
+
 export default class LoginPage extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      loginEnable: true
+      phoneValidate: false,
+      passwordValidate: false,
+      loginEnable: false,
+
+      phone: "",
+      password: ""
+    }
+  }
+
+  phoneOnChange(text) {
+    if(text.length == 0){
+      this.setState({ phoneValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ phoneValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      phone: text
+    })
+  }
+
+  passwordOnChange(text) {
+    if(text.length == 0){
+      this.setState({ passwordValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ passwordValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      password: text
+    })
+  }
+
+  checkNext() {
+    if(this.state.phoneValidate &&
+      this.state.passwordValidate) {
+      this.setState({ loginEnable: true })
+    } else {
+      this.setState({ loginEnable: false })
     }
   }
 
@@ -28,7 +70,31 @@ export default class LoginPage extends Component {
       this.setState({
         loginEnable: !this.state.loginEnable
       })
-      Actions.main()
+
+      APIClient.access(APIInterface.login(this.state.phone, this.state.password))
+        .then((response) => {
+          return response.json()
+        })
+        .then((json) => {
+          console.log(json)
+          if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+            // 存储登陆token
+            AsyncStorage.setItem(StorageConstant.TOKEN, json.token, function(error) {
+              if (error) {
+                console.log(error)
+              }
+              if (!error) {
+                Actions.main({ type: ActionConst.POP_AND_REPLACE })
+              }
+            });
+
+          } else {
+            alert(json.errorCode)
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
     }
   }
 
@@ -74,6 +140,7 @@ export default class LoginPage extends Component {
                 }}
                 source={ require('../resource/icon-phone.jpg') }/>
               <TextInput
+                onChangeText = { this.phoneOnChange.bind(this) }
                 style={{
                   width: 186,
                   marginLeft: 45,
@@ -108,9 +175,10 @@ export default class LoginPage extends Component {
                 }}
                 source={ require('../resource/icon-password.jpg') }/>
               <TextInput
+                onChangeText = { this.passwordOnChange.bind(this) }
                 style={{
                   width: 186,
-                  marginLeft: 45,
+                  marginLeft: 48,
                   fontFamily: 'ArialMT',
                   fontSize: 16,
                   color: '#ffffff',

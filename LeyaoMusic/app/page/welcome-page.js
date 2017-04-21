@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  AsyncStorage,
   View,
   Text,
   Image
@@ -8,13 +9,29 @@ import {
   Actions,
   ActionConst
 } from 'react-native-router-flux';
+import StorageConstant from '../service/storage-constant';
 
 export default class WelcomePage extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      Actions.guide({ type: ActionConst.REPLACE })
-    }, 3000)
+      // 获取存储的登陆token
+      copy = this
+      AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+        if (error) {
+          console.log(error);
+          Actions.guide({ type: ActionConst.REPLACE })
+        }
+        if (!error) {
+          if(result == null) {
+            Actions.guide({ type: ActionConst.REPLACE })
+          } else {
+            console.log(result)
+            Actions.main({ type: ActionConst.REPLACE })
+          }
+        }
+      })
+    }, 2000)
   }
 
   render() {
