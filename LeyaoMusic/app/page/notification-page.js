@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  AsyncStorage,
   Dimensions,
   Image,
   ListView,
@@ -12,18 +13,29 @@ import {
   Actions
 } from 'react-native-router-flux';
 
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
+import StorageConstant from '../service/storage-constant';
+
 export default class NotificationPage extends Component {
 
   constructor(props) {
     super(props)
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    var initialData = ['row 1', 'row 2', 'row 2', 'row 2', 'row 2', 'row 2', 'row 2', 'row 2', 'row 2', 'row 2', 'row 2', 'row 2']
+    var initialData = []
     //initialData = []
     this.state = {
       dataSource: ds.cloneWithRows(initialData),
       refreshing: false,
       data: initialData
     }
+
+    this.loadData.bind(this)
+  }
+
+  componentDidMount() {
+    this.loadData()
   }
 
   back() {
@@ -31,9 +43,44 @@ export default class NotificationPage extends Component {
   }
 
   onRefresh() {
-    this.setState({
-      refreshing: true
-    })
+    this.loadData()
+  }
+
+  loadData() {
+    // 获取存储的登陆token
+    copy = this
+    copy.setState({ refreshing: true })
+
+    setTimeout(() => {
+      AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+        if (error) {
+          copy.setState({ refreshing: false })
+          console.log(error);
+        }
+        if (!error) {
+          // 获取消息列表
+          APIClient.access(APIInterface.getNoticeList(result, 10, 1))
+            .then((response) => {
+              copy.setState({ indicating: false})
+              return response.json()
+            })
+            .then((json) => {
+              console.log(json)
+              if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                copy.setState({
+                  data: json.data
+                })
+              } else {
+                alert(json.errorCode)
+              }
+            })
+            .catch((error) => {
+              copy.setState({ refreshing: false})
+              console.log(error)
+            })
+        }
+      })
+    }, 1000)
   }
 
   render() {
@@ -93,7 +140,7 @@ export default class NotificationPage extends Component {
                refreshControl={
                  <RefreshControl
                    refreshing={ this.state.refreshing }
-                   onRefresh={this.onRefresh.bind(this)}
+                   onRefresh={ this.onRefresh.bind(this) }
                    tintColor="#cccccc"
                    title="正在加载中..."
                    titleColor="#ffffff"

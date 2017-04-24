@@ -60,4 +60,15 @@ export default class APIInterface {
       'friends': friends
     })
   }
+
+  static getNoticeList(token, numPerPage, pageNum) {
+    return BaseRequest.post(APIConstant.BASE_URL + '/notice/getNoticeList', {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'token': token
+    }, {
+      'numPerPage': numPerPage,
+      'pageNum': pageNum
+    })
+  }
 }
