@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Actions,
   Scene,
+  Reducer,
   Router
 } from 'react-native-router-flux';
 
@@ -24,8 +25,18 @@ import TabIconWidget from './widget/tab-icon-widget'
 export default class AppRouter extends Component {
   render() {
     return (
-      <Router scenes={ scenes }/>
+      <Router scenes={ scenes } createReducer={ reducerCreate }/>
     );
+  }
+}
+
+const reducerCreate = params => {
+  const defaultReducer = new Reducer(params)
+  console.log('params:', params)
+  return (state, action) => {
+    console.log('action:', action)
+    console.log('state:', state)
+    return defaultReducer(state, action)
   }
 }
 
