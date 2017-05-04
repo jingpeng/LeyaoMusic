@@ -12,9 +12,60 @@ import {
   ActionConst
 } from 'react-native-router-flux';
 
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
 import StorageConstant from '../service/storage-constant';
 
 export default class ProfilePage extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      avatar: require('../resource/default-avatar.png'),
+      realName: "未知",
+      gender: "未知",
+      userName: "未知",
+      email: "未知"
+    }
+  }
+
+  componentDidMount() {
+    // 获取存储的登陆token
+    copy = this
+    AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+      if (error) {
+        console.log(error)
+        return
+      }
+      if (!error) {
+        if(result == null) {
+        } else {
+          console.log(result)
+
+          APIClient.access(APIInterface.details(result))
+            .then((response) => {
+              return response.json()
+            })
+            .then((json) => {
+              console.log(json)
+              if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                copy.setState({
+                  avatar: {uri: (APIConstant.BASE_FILE_URI + json.data.pic)},
+                  realName: json.data.realname,
+                  userName: json.data.username,
+                })
+              } else {
+                alert(json.errorCode)
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+        }
+      }
+    })
+  }
 
   logout() {
     // 存储登陆token
@@ -70,8 +121,9 @@ export default class ProfilePage extends Component {
               marginLeft: 11
             }}>头像</Text>
           <Image
-            source={ require('../resource/default-avatar.png') }
+            source={ this.state.avatar }
             style={{
+              borderRadius: 21,
               width: 42,
               height: 42,
               marginRight: 11
@@ -100,7 +152,7 @@ export default class ProfilePage extends Component {
               fontSize: 13,
               color: '#ffffff',
               marginRight: 11
-            }}>乐瑶音乐</Text>
+            }}>{ this.state.realName }</Text>
         </View>
         <View
           style={{
@@ -139,7 +191,7 @@ export default class ProfilePage extends Component {
               fontSize: 13,
               color: '#ffffff',
               marginRight: 11
-            }}>男</Text>
+            }}>{ this.state.gender }</Text>
         </View>
         <View
           style={{
@@ -164,7 +216,7 @@ export default class ProfilePage extends Component {
               fontSize: 13,
               color: '#ffffff',
               marginRight: 11
-            }}>18611202198</Text>
+            }}>{ this.state.userName }</Text>
         </View>
         <View
           style={{
@@ -203,7 +255,7 @@ export default class ProfilePage extends Component {
               fontSize: 13,
               color: '#ffffff',
               marginRight: 11
-            }}>42166663@qq.com</Text>
+            }}>{ this.state.email }</Text>
         </View>
         <TouchableWithoutFeedback
           onPress={ this.logout.bind(this) }>

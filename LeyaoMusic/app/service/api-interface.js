@@ -71,4 +71,10 @@ export default class APIInterface {
       'pageNum': pageNum
     })
   }
+
+  static details(token) {
+    return BaseRequest.get(APIConstant.BASE_URL + '/user/details', {
+      'token': token
+    })
+  }
 }
