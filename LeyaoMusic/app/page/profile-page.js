@@ -1,12 +1,32 @@
 import React, { Component } from "react";
 import {
+  AsyncStorage,
   Dimensions,
   Image,
   Text,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
+import {
+  Actions,
+  ActionConst
+} from 'react-native-router-flux';
+
+import StorageConstant from '../service/storage-constant';
 
 export default class ProfilePage extends Component {
+
+  logout() {
+    // 存储登陆token
+    AsyncStorage.removeItem(StorageConstant.TOKEN, function(error) {
+      if (error) {
+        console.log(error)
+      }
+      if (!error) {
+        Actions.login({ type: ActionConst.REPLACE })
+      }
+    });
+  }
 
   render() {
     return (
@@ -185,6 +205,27 @@ export default class ProfilePage extends Component {
               marginRight: 11
             }}>42166663@qq.com</Text>
         </View>
+        <TouchableWithoutFeedback
+          onPress={ this.logout.bind(this) }>
+          <View
+            style={{
+              width: Dimensions.get('window').width - 125,
+              height: 43,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginTop: 40,
+              borderRadius: 21
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 15,
+                color: '#ffffff'
+              }}>退出登录</Text>
+          </View>
+        </TouchableWithoutFeedback>
       </Image>
     );
   }
