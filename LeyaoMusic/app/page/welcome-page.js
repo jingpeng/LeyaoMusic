@@ -54,7 +54,7 @@ export default class WelcomePage extends Component {
               color: '#ffffff',
               fontWeight: 'bold',
               alignSelf: 'center'
-            }}>乐瑶音乐</Text>
+            }}>乐谣音乐</Text>
           <Text
             style={{
               fontFamily: 'PingFang SC',
