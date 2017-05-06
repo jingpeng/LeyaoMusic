@@ -23,7 +23,7 @@ export default class NotificationPage extends Component {
   constructor(props) {
     super(props)
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    var initialData = []
+    var initialData = [{empty: true}]
     //initialData = []
     this.state = {
       dataSource: ds.cloneWithRows(initialData),
@@ -49,26 +49,28 @@ export default class NotificationPage extends Component {
   loadData() {
     // 获取存储的登陆token
     copy = this
+
     copy.setState({ refreshing: true })
 
     setTimeout(() => {
       AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
         if (error) {
-          copy.setState({ refreshing: false })
           console.log(error);
         }
         if (!error) {
           // 获取消息列表
           APIClient.access(APIInterface.getNoticeList(result, 10, 1))
             .then((response) => {
-              copy.setState({ indicating: false})
+              copy.setState({ refreshing: false})
               return response.json()
             })
             .then((json) => {
               console.log(json)
               if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
                 copy.setState({
-                  data: json.data
+                  data: json.data,
+                  dataSource: ds.cloneWithRows(json.data)
                 })
               } else {
                 alert(json.errorCode)
@@ -80,7 +82,7 @@ export default class NotificationPage extends Component {
             })
         }
       })
-    }, 1000)
+    }, 1500)
   }
 
   render() {
@@ -133,88 +135,86 @@ export default class NotificationPage extends Component {
             </View>
           </TouchableWithoutFeedback>
         </View>
-        {
-           ( this.state.data.length > 0) ? (
-             <ListView
-               dataSource={ this.state.dataSource }
-               refreshControl={
-                 <RefreshControl
-                   refreshing={ this.state.refreshing }
-                   onRefresh={ this.onRefresh.bind(this) }
-                   tintColor="#cccccc"
-                   title="正在加载中..."
-                   titleColor="#ffffff"
-                   colors={ ['#cccccc', '#777777'] }/>
-               }
-               renderRow={ (rowData) =>
-                 <View
-                   style={{
-                     width: Dimensions.get('window').width,
-                     marginTop: 20,
-                     flexDirection: 'row',
-                     justifyContent: 'center'
-                   }}>
-                   <View
-                     style={{
-                       width: Dimensions.get('window').width - 46,
-                       borderRadius: 5,
-                       backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                     }}>
-                     <Text
-                       style={{
-                         fontFamily: 'ArialMT',
-                         fontSize: 15,
-                         marginLeft: 35,
-                         marginTop: 10,
-                         color: '#ffffff'
-                       }}>系统消息</Text>
-                     <Text
-                       style={{
-                         fontFamily: 'ArialMT',
-                         fontSize: 13,
-                         marginLeft: 35,
-                         marginRight: 35,
-                         marginTop: 5,
-                         marginBottom: 10,
-                         color: 'rgba(255, 255, 255, 0.8)'
-                       }}>系统消息系统消息系统消息系统消息系统消息系统消息系统消息系统消息系统消息系统消息系统消息系统消息</Text>
-                     <Text
-                       style={{
-                         position: 'absolute',
-                         fontFamily: 'ArialMT',
-                         fontSize: 10,
-                         right: 10,
-                         top: 10,
-                         color: 'rgba(255, 255, 255, 0.6)'
-                       }}>2017-3-4  13:00</Text>
-                   </View>
-                   <Image
-                     source={ require('../resource/music-note-set.jpg') }
-                     style={{
-                       width: 27.5,
-                       height: 37.5,
-                       top: -10,
-                       left: 18,
-                       position: 'absolute'
-                     }}/>
-                 </View>
-               }/>
-           ) : (
-              <View
-                style={{
-                  position: 'absolute',
-                  height: Dimensions.get('window').height,
-                  justifyContent: 'center'
-                }}>
+        <ListView
+          dataSource={ this.state.dataSource }
+          enableEmptySections={ true }
+          refreshControl={
+            <RefreshControl
+              refreshing={ this.state.refreshing }
+              onRefresh={ this.onRefresh.bind(this) }
+              tintColor="#cccccc"
+              title="正在加载中..."
+              titleColor="#ffffff"
+              colors={ ['#cccccc', '#777777'] }/>
+          }
+          renderRow={ (rowData) => {
+            let pushDateString = new Date(rowData.pushDate).toLocaleString();
+            console.log(pushDateString)
+
+            return ( rowData.empty ) ? (
+              <View>
                 <Image
                   source={ require('../resource/notification-empty-status.png') }
                   style={{
-                   width: 116.5,
-                   height: 163
+                    width: 116.5,
+                    height: 163,
+                    marginTop: 100
                   }}/>
               </View>
-           )
-        }
+            ) : (
+              <View
+                style={{
+                  width: Dimensions.get('window').width,
+                  marginTop: 20,
+                  flexDirection: 'row',
+                  justifyContent: 'center'
+                }}>
+                <View
+                  style={{
+                    width: Dimensions.get('window').width - 46,
+                    borderRadius: 5,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: 'ArialMT',
+                      fontSize: 15,
+                      marginLeft: 35,
+                      marginTop: 10,
+                      color: '#ffffff'
+                    }}>系统消息</Text>
+                  <Text
+                    style={{
+                      fontFamily: 'ArialMT',
+                      fontSize: 13,
+                      marginLeft: 35,
+                      marginRight: 35,
+                      marginTop: 5,
+                      marginBottom: 10,
+                      color: 'rgba(255, 255, 255, 0.8)'
+                    }}>{ rowData.content }</Text>
+                  <Text
+                    style={{
+                      position: 'absolute',
+                      fontFamily: 'ArialMT',
+                      fontSize: 10,
+                      right: 10,
+                      top: 10,
+                      color: 'rgba(255, 255, 255, 0.6)'
+                    }}>{ pushDateString }</Text>
+                </View>
+                <Image
+                  source={ require('../resource/music-note-set.jpg') }
+                  style={{
+                    width: 27.5,
+                    height: 37.5,
+                    top: -10,
+                    left: 18,
+                    position: 'absolute'
+                  }}/>
+              </View>
+            )
+          }}/>
       </Image>
     );
   }
