@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -12,26 +13,153 @@ import {
   Actions
 } from 'react-native-router-flux';
 
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
+
 export default class SetPasswordPage extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      nextEnable: true,
-      verifyEnable: true
+      indicating: false,
+      nextEnable: false,
+      verifyEnable: true,
+
+      phoneValidate: false,
+      verifyValidate: false,
+      passwordValidate: false,
+      confirmPasswordValidate: false,
+
+      phone: '',
+      password: '',
+      code: '',
+      confirmPassword: ''
     }
+    this.validateParam.bind(this)
+    this.checkNext.bind(this)
+    this.next.bind(this)
   }
 
   back() {
     Actions.pop()
   }
 
-  verify() {
+  phoneOnChange(text) {
+    if(text.length == 0){
+      this.setState({ phoneValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ phoneValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      phone: text
+    })
+  }
 
+  verifyOnChange(text) {
+    if(text.length == 0){
+      this.setState({ verifyValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ verifyValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      code: text
+    })
+  }
+
+  passwordOnChange(text) {
+    if(text.length == 0){
+      this.setState({ passwordValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ passwordValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      password: text
+    })
+  }
+
+  confirmPasswordOnChange(text) {
+    if(text.length == 0){
+      this.setState({ confirmPasswordValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ confirmPasswordValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      confirmPassword: text
+    })
+  }
+
+  checkNext() {
+    if(this.state.phoneValidate &&
+      this.state.verifyValidate &&
+      this.state.passwordValidate &&
+      this.state.confirmPasswordValidate) {
+      this.setState({ nextEnable: true })
+    } else {
+      this.setState({ nextEnable: false })
+    }
+  }
+
+  verify() {
+    this.setState({ indicating: true})
+    APIClient.access(APIInterface.getVerifyCode(this.state.phone))
+      .then((response) => {
+        this.setState({ indicating: false})
+        return response.json()
+      })
+      .then((json) => {
+        console.log(json)
+        if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+          // alert(json.errorCode)
+          alert('验证码已发送')
+        } else {
+          alert(json.errorCode)
+        }
+      })
+      .catch((error) => {
+        this.setState({ indicating: false})
+        console.log(error)
+      })
+  }
+
+  validateParam() {
+    // 目前只校验密码一致性
+    if(this.state.password != this.state.confirmPassword) {
+      alert('密码不一致')
+      return false
+    }
+
+    return true
   }
 
   next() {
+    if(this.state.nextEnable) {
+      // 进行UI参数校验
+      if(!this.validateParam()) {
+        return
+      }
 
+      // 进行注册操作
+      this.setState({ indicating: true})
+      APIClient.access(APIInterface.forgetPWD(this.state.phone, this.state.password, this.state.code))
+        .then((response) => {
+          this.setState({ indicating: false})
+          return response.json()
+        })
+        .then((json) => {
+          console.log(json)
+          if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+            alert(json.errorCode)
+            this.back()
+          } else {
+            alert(json.errorCode)
+          }
+        })
+        .catch((error) => {
+          this.setState({ indicating: false})
+          console.log(error)
+        })
+    }
   }
 
   render() {
@@ -46,6 +174,14 @@ export default class SetPasswordPage extends Component {
           height: null,
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
+        <ActivityIndicator
+          animating={ this.state.indicating }
+          style={{
+            position: 'absolute',
+            top: (Dimensions.get('window').height - 80) / 2,
+            height: 80
+          }}
+          size="large"/>
         <View
           style={{
             marginTop: 20,
@@ -113,6 +249,7 @@ export default class SetPasswordPage extends Component {
                     color: '#ffffff'
                   }}>手机号</Text>
                 <TextInput
+                  onChangeText = { this.phoneOnChange.bind(this) }
                   style={{
                     width: 160,
                     fontFamily: 'ArialMT',
@@ -153,6 +290,7 @@ export default class SetPasswordPage extends Component {
                     marginTop: -2
                   }}>
                   <TextInput
+                    onChangeText = { this.verifyOnChange.bind(this) }
                     style={{
                       width: 96,
                       fontFamily: 'ArialMT',
@@ -205,6 +343,7 @@ export default class SetPasswordPage extends Component {
                     color: '#ffffff'
                   }}>密码</Text>
                 <TextInput
+                  onChangeText = { this.passwordOnChange.bind(this) }
                   style={{
                     width: 160,
                     fontFamily: 'ArialMT',
@@ -238,6 +377,7 @@ export default class SetPasswordPage extends Component {
                     color: '#ffffff'
                   }}>确认密码</Text>
                 <TextInput
+                  onChangeText = { this.confirmPasswordOnChange.bind(this) }
                   style={{
                     width: 160,
                     fontFamily: 'ArialMT',

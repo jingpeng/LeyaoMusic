@@ -37,6 +37,16 @@ export default class APIInterface {
     })
   }
 
+  static forgetPWD(username, password, code) {
+    return BaseRequest.post(APIConstant.BASE_URL + '/user/forgetPWD', {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }, {
+      'username': username,
+      'password': password,
+      'code': code
+    })
+  }
 
   static upload(token, fileName, base64) {
     return BaseRequest.post(APIConstant.BASE_URL + '/file/upload', {
