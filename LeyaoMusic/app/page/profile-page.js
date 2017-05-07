@@ -74,7 +74,7 @@ export default class ProfilePage extends Component {
         console.log(error)
       }
       if (!error) {
-        Actions.login({ type: ActionConst.REPLACE })
+        Actions.guide({ type: ActionConst.REPLACE })
       }
     });
   }
