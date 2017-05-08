@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
+  Alert,
   AsyncStorage,
   Dimensions,
   Image,
@@ -113,9 +114,9 @@ export default class RegisterOnePage extends Component {
         console.log(json)
         if(json.callStatus == APIConstant.STATUS_SUCCEED) {
           // alert(json.errorCode)
-          alert('验证码已发送')
+          Alert.alert('', '验证码已发送')
         } else {
-          alert(json.errorCode)
+          Alert.alert('', json.errorCode)
         }
       })
       .catch((error) => {
@@ -127,7 +128,7 @@ export default class RegisterOnePage extends Component {
   validateParam() {
     // 目前只校验密码一致性
     if(this.state.password != this.state.confirmPassword) {
-      alert('密码不一致')
+      Alert.alert('', '密码不一致')
       return false
     }
 
@@ -176,7 +177,7 @@ export default class RegisterOnePage extends Component {
                   });
 
                 } else {
-                  alert(json.errorCode)
+                  Alert.alert('', json.errorCode)
                 }
               })
               .catch((error) => {
@@ -184,7 +185,7 @@ export default class RegisterOnePage extends Component {
                 console.log(error);
               })
           } else {
-            alert(json.errorCode)
+            Alert.alert('', json.errorCode)
           }
         })
         .catch((error) => {

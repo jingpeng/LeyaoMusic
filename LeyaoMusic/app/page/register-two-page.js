@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   ActionSheetIOS,
+  Alert,
   AsyncStorage,
   ActivityIndicator,
   Dimensions,
@@ -102,7 +103,7 @@ export default class RegisterTwoPage extends Component {
                         data: json.data
                       })
                     } else {
-                      alert(json.errorCode)
+                      Alert.alert('', json.errorCode)
                     }
                   })
                   .catch((error) => {
@@ -182,7 +183,7 @@ export default class RegisterTwoPage extends Component {
               if(json.callStatus == APIConstant.STATUS_SUCCEED) {
                 Actions.popTo('login')
               } else {
-                alert(json.errorCode)
+                Alert.alert('', json.errorCode)
               }
             })
             .catch((error) => {

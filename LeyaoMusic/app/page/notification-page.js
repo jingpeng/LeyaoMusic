@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Alert,
   AsyncStorage,
   Dimensions,
   Image,
@@ -73,7 +74,7 @@ export default class NotificationPage extends Component {
                   dataSource: ds.cloneWithRows(json.data)
                 })
               } else {
-                alert(json.errorCode)
+                Alert.alert('', json.errorCode)
               }
             })
             .catch((error) => {

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Alert,
   AsyncStorage,
   Dimensions,
   Image,
@@ -56,7 +57,7 @@ export default class ProfilePage extends Component {
                   userName: json.data.username,
                 })
               } else {
-                alert(json.errorCode)
+                Alert.alert('', json.errorCode)
               }
             })
             .catch((error) => {

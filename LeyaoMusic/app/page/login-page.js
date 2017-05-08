@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  Alert,
   AsyncStorage,
   Image,
   KeyboardAvoidingView,
@@ -89,7 +90,7 @@ export default class LoginPage extends Component {
             });
 
           } else {
-            alert(json.errorCode)
+            Alert.alert('', json.errorCode)
           }
         })
         .catch((error) => {

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -111,9 +112,9 @@ export default class SetPasswordPage extends Component {
         console.log(json)
         if(json.callStatus == APIConstant.STATUS_SUCCEED) {
           // alert(json.errorCode)
-          alert('验证码已发送')
+          Alert.alert('', '验证码已发送')
         } else {
-          alert(json.errorCode)
+          Alert.alert('', json.errorCode)
         }
       })
       .catch((error) => {
@@ -125,7 +126,7 @@ export default class SetPasswordPage extends Component {
   validateParam() {
     // 目前只校验密码一致性
     if(this.state.password != this.state.confirmPassword) {
-      alert('密码不一致')
+      Alert.alert('', '密码不一致')
       return false
     }
 
@@ -149,10 +150,10 @@ export default class SetPasswordPage extends Component {
         .then((json) => {
           console.log(json)
           if(json.callStatus == APIConstant.STATUS_SUCCEED) {
-            alert(json.errorCode)
+            Alert.alert('', json.errorCode)
             this.back()
           } else {
-            alert(json.errorCode)
+            Alert.alert('', json.errorCode)
           }
         })
         .catch((error) => {
