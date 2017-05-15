@@ -68,6 +68,10 @@ export default class ProfilePage extends Component {
     })
   }
 
+  updateName() {
+    Actions.update_name()
+  }
+
   logout() {
     // 存储登陆token
     AsyncStorage.removeItem(StorageConstant.TOKEN, function(error) {
@@ -130,31 +134,34 @@ export default class ProfilePage extends Component {
               marginRight: 11
             }}/>
         </View>
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            height: 43,
-            marginTop: 5,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-          <Text
+        <TouchableWithoutFeedback
+          onPress={ this.updateName.bind(this) }>
+          <View
             style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              color: '#ffffff',
-              marginLeft: 11
-            }}>姓名</Text>
-          <Text
-            style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              color: '#ffffff',
-              marginRight: 11
-            }}>{ this.state.realName }</Text>
-        </View>
+              width: Dimensions.get('window').width,
+              height: 43,
+              marginTop: 5,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                color: '#ffffff',
+                marginLeft: 11
+              }}>姓名</Text>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                color: '#ffffff',
+                marginRight: 11
+              }}>{ this.state.realName }</Text>
+          </View>
+        </TouchableWithoutFeedback>
         <View
           style={{
             width: Dimensions.get('window').width,

@@ -19,6 +19,7 @@ import ProfilePage from './page/profile-page';
 import NotificationPage from './page/notification-page';
 import StaveIntroductionPage from './page/stave-introduction-page';
 import NoteDurationPage from './page/note-duration-page';
+import UpdateNamePage from './page/update-name-page';
 
 import TabIconWidget from './widget/tab-icon-widget'
 
@@ -123,5 +124,9 @@ const scenes = Actions.create(
       key="note_duration"
       hideNavBar={ true }
       component={ NoteDurationPage }/>
+    <Scene
+      key="update_name"
+      hideNavBar={ true }
+      component={ UpdateNamePage }/>
   </Scene>
 );
