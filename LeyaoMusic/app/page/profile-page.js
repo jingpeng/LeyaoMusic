@@ -69,7 +69,7 @@ export default class ProfilePage extends Component {
   }
 
   updateName() {
-    Actions.update_name()
+    Actions.update_name({realName: this.state.realName})
   }
 
   logout() {

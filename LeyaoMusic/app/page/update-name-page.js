@@ -16,7 +16,7 @@ export default class UpdateNamePage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: '123'
+      name: props.realName
     }
   }
 
