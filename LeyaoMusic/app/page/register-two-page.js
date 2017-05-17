@@ -173,7 +173,12 @@ export default class RegisterTwoPage extends Component {
         if (!error) {
           // 完善个人信息
           copy.setState({ indicating: true})
-          APIClient.access(APIInterface.updateUser(result, copy.state.name, copy.state.data, ""))
+          var body = {
+            'realname': copy.state.name,
+            'pic': copy.state.data,
+            'friends': ""
+          }
+          APIClient.access(APIInterface.updateUser(result, body))
             .then((response) => {
               copy.setState({ indicating: false})
               return response.json()

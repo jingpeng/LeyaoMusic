@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import {
+  ActionSheetIOS,
   Alert,
   AsyncStorage,
+  ActivityIndicator,
   Dimensions,
   Image,
   Text,
@@ -12,26 +14,50 @@ import {
   Actions,
   ActionConst
 } from 'react-native-router-flux';
+import ImagePicker from 'react-native-image-picker';
 
 import APIClient from '../service/api-client';
 import APIInterface from '../service/api-interface';
 import APIConstant from '../service/api-constant';
 import StorageConstant from '../service/storage-constant';
 
+const choosePictureOption = [
+  '拍照',
+  '从手机相册选择',
+  '取消'
+]
+const CHOOSE_PICTURE_OPTION_CANCEL_INDEX = 2
+
+const options = {
+  mediaType: 'photo', // 'photo' or 'video'
+  videoQuality: 'high', // 'low', 'medium', or 'high'
+  durationLimit: 10, // video recording max time in seconds
+  maxWidth: 100, // photos only默认为手机屏幕的宽，高与宽一样，为正方形照片
+  maxHeight: 100, // photos only
+  allowsEditing: true, // 当用户选择过照片之后是否允许再次编辑图片
+};
+
 export default class ProfilePage extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      indicating: false,
+
       avatar: require('../resource/default-avatar.png'),
       realName: "未知",
       gender: "未知",
       userName: "未知",
-      email: "未知"
+      email: "未知",
     }
+    this.load.bind(this)
   }
 
   componentDidMount() {
+    this.load()
+  }
+
+  load() {
     // 获取存储的登陆token
     copy = this
     AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
@@ -68,6 +94,79 @@ export default class ProfilePage extends Component {
     })
   }
 
+  choosePicture() {
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: choosePictureOption,
+      cancelButtonIndex: CHOOSE_PICTURE_OPTION_CANCEL_INDEX
+    },
+    (buttonIndex) => {
+      switch (buttonIndex) {
+        case 0:
+          ImagePicker.launchCamera(options, (response) => {
+
+          });
+          break;
+        case 1:
+          ImagePicker.launchImageLibrary(options, (response) => {
+            if(response.didCancel) {
+              return
+            }
+            // 获取存储的登陆token
+            copy = this
+            copy.setState({ indicating: true})
+            AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+              copy.setState({ indicating: false})
+
+              if (error) {
+                console.log(error);
+              }
+              if (!error) {
+                // 上传文件
+                copy.setState({ indicating: true})
+                APIClient.access(APIInterface.upload(result, response.fileName, response.data))
+                  .then((response) => {
+                    copy.setState({ indicating: false})
+                    return response.json()
+                  })
+                  .then((json) => {
+                    console.log(json)
+                    if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                      var body = {
+                        'pic': json.data
+                      }
+                      APIClient.access(APIInterface.updateUser(result, body))
+                        .then((response) => {
+                          copy.setState({ indicating: false})
+                          return response.json()
+                        })
+                        .then((json) => {
+                          console.log(json)
+                          if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                            copy.load()
+                          } else {
+                            Alert.alert('', json.errorCode)
+                          }
+                        })
+                        .catch((error) => {
+                          copy.setState({ indicating: false})
+                          console.log(error)
+                        })
+                    } else {
+                      Alert.alert('', json.errorCode)
+                    }
+                  })
+                  .catch((error) => {
+                    copy.setState({ indicating: false})
+                    console.log(error)
+                  })
+              }
+            });
+          });
+          break;
+      }
+    })
+  }
+
   updateName() {
     Actions.update_name({realName: this.state.realName})
   }
@@ -94,6 +193,14 @@ export default class ProfilePage extends Component {
           height: null,
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
+        <ActivityIndicator
+          animating={ this.state.indicating }
+          style={{
+            position: 'absolute',
+            top: (Dimensions.get('window').height - 80) / 2,
+            height: 80
+          }}
+          size="large"/>
         <View
           style={{
             marginTop: 20,
@@ -108,32 +215,35 @@ export default class ProfilePage extends Component {
               color: '#ffffff'
             }}>个人资料</Text>
         </View>
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            height: 59,
-            marginTop: 10,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-          <Text
+        <TouchableWithoutFeedback
+          onPress={ this.choosePicture.bind(this) }>
+          <View
             style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              color: '#ffffff',
-              marginLeft: 11
-            }}>头像</Text>
-          <Image
-            source={ this.state.avatar }
-            style={{
-              borderRadius: 21,
-              width: 42,
-              height: 42,
-              marginRight: 11
-            }}/>
-        </View>
+              width: Dimensions.get('window').width,
+              height: 59,
+              marginTop: 10,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                color: '#ffffff',
+                marginLeft: 11
+              }}>头像</Text>
+            <Image
+              source={ this.state.avatar }
+              style={{
+                borderRadius: 21,
+                width: 42,
+                height: 42,
+                marginRight: 11
+              }}/>
+          </View>
+        </TouchableWithoutFeedback>
         <TouchableWithoutFeedback
           onPress={ this.updateName.bind(this) }>
           <View

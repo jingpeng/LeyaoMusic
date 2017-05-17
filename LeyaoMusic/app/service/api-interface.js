@@ -59,16 +59,12 @@ export default class APIInterface {
     })
   }
 
-  static updateUser(token, realname, pic, friends) {
+  static updateUser(token, body) {
     return BaseRequest.post(APIConstant.BASE_URL + '/user/updateUser', {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'token': token
-    }, {
-      'realname': realname,
-      'pic': pic,
-      'friends': friends
-    })
+    }, body)
   }
 
   static getNoticeList(token, numPerPage, pageNum) {
