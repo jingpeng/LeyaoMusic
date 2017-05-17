@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  AsyncStorage,
   Dimensions,
   Image,
   Text,
@@ -10,6 +11,11 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
+import StorageConstant from '../service/storage-constant';
 
 export default class UpdateNamePage extends Component {
 
@@ -22,6 +28,43 @@ export default class UpdateNamePage extends Component {
 
   back() {
     Actions.pop()
+  }
+
+  save() {
+    copy = this
+    AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+      if (error) {
+        console.log(error)
+        return
+      }
+      if (!error) {
+        if(result == null) {
+        } else {
+          console.log(result)
+
+          var body = {
+            'realname': copy.state.name
+          }
+          APIClient.access(APIInterface.updateUser(result, body))
+            .then((response) => {
+              copy.setState({ indicating: false})
+              return response.json()
+            })
+            .then((json) => {
+              console.log(json)
+              if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                Actions.pop()
+              } else {
+                Alert.alert('', json.errorCode)
+              }
+            })
+            .catch((error) => {
+              copy.setState({ indicating: false})
+              console.log(error)
+            })
+        }
+      }
+    })
   }
 
   render() {
@@ -63,13 +106,20 @@ export default class UpdateNamePage extends Component {
               fontSize: 18,
               color: '#ffffff'
             }}>修改姓名</Text>
-          <Text
-            style={{
-              fontFamily: 'ArialMT',
-              fontSize: 16,
-              color: '#b3d66e',
-              marginRight: 10
-            }}>保存</Text>
+          <TouchableWithoutFeedback
+            onPress={ this.save.bind(this) }>
+            <View
+              style={{
+                marginRight: 10
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 16,
+                  color: '#b3d66e'
+                }}>保存</Text>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
         <View
           style={{
