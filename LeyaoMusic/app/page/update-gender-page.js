@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
+  Alert,
+  AsyncStorage,
   Dimensions,
   Image,
   Text,
@@ -11,6 +13,11 @@ import {
   Actions
 } from 'react-native-router-flux';
 
+import APIClient from '../service/api-client';
+import APIInterface from '../service/api-interface';
+import APIConstant from '../service/api-constant';
+import StorageConstant from '../service/storage-constant';
+
 export default class UpdateGenderPage extends Component {
 
   constructor(props) {
@@ -19,11 +26,71 @@ export default class UpdateGenderPage extends Component {
       indicating: false,
       maleChecked: (props.gender == 'M') ? true : false,
       femaleChecked: (props.gender == 'F') ? true : false,
+      sex: ''
     }
+
+    this.save.bind(this)
   }
 
   back() {
     Actions.pop()
+  }
+
+  maleCheck() {
+    this.setState({
+      maleChecked: true,
+      femaleChecked: false,
+      sex: 'M'
+    })
+
+    this.save()
+  }
+
+  femaleCheck() {
+    this.setState({
+      maleChecked: false,
+      femaleChecked: true,
+      sex: 'F'
+    })
+
+    this.save()
+  }
+
+  save() {
+    copy = this
+    AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+      if (error) {
+        console.log(error)
+        return
+      }
+      if (!error) {
+        if(result == null) {
+        } else {
+          console.log(result)
+
+          var body = {
+            'sex': copy.state.sex
+          }
+          APIClient.access(APIInterface.updateUser(result, body))
+            .then((response) => {
+              copy.setState({ indicating: false})
+              return response.json()
+            })
+            .then((json) => {
+              console.log(json)
+              if(json.callStatus == APIConstant.STATUS_SUCCEED) {
+                Alert.alert('', json.errorCode)
+              } else {
+                Alert.alert('', json.errorCode)
+              }
+            })
+            .catch((error) => {
+              copy.setState({ indicating: false})
+              console.log(error)
+            })
+        }
+      }
+    })
   }
 
   render() {
@@ -83,70 +150,76 @@ export default class UpdateGenderPage extends Component {
             </View>
           </TouchableWithoutFeedback>
         </View>
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            height: 51,
-            marginTop: 5,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-          <Text
+        <TouchableWithoutFeedback
+          onPress={ this.maleCheck.bind(this) }>
+          <View
             style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              marginLeft: 10,
-              color: '#ffffff'
-            }}>男</Text>
-          {
-            this.state.maleChecked ? (
-              <Image
-                source={ require('../resource/gender-selected.png') }
-                style={{
-                  width: 15,
-                  height: 10,
-                  marginRight: 10,
-                  backgroundColor: 'rgba(0, 0, 0, 0)'
-                }}/>
-            ) : (
-              null
-            )
-          }
-        </View>
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            height: 51,
-            marginTop: 1,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-          <Text
+              width: Dimensions.get('window').width,
+              height: 51,
+              marginTop: 5,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                marginLeft: 10,
+                color: '#ffffff'
+              }}>男</Text>
+            {
+              this.state.maleChecked ? (
+                <Image
+                  source={ require('../resource/gender-selected.png') }
+                  style={{
+                    width: 15,
+                    height: 10,
+                    marginRight: 10,
+                    backgroundColor: 'rgba(0, 0, 0, 0)'
+                  }}/>
+              ) : (
+                null
+              )
+            }
+          </View>
+        </TouchableWithoutFeedback>
+        <TouchableWithoutFeedback
+          onPress={ this.femaleCheck.bind(this) }>
+          <View
             style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              marginLeft: 10,
-              color: '#ffffff'
-            }}>女</Text>
-          {
-            this.state.femaleChecked ? (
-              <Image
-                source={ require('../resource/gender-selected.png') }
-                style={{
-                  width: 15,
-                  height: 10,
-                  marginRight: 10,
-                  backgroundColor: 'rgba(0, 0, 0, 0)'
-                }}/>
-            ) : (
-              null
-            )
-          }
-        </View>
+              width: Dimensions.get('window').width,
+              height: 51,
+              marginTop: 1,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                marginLeft: 10,
+                color: '#ffffff'
+              }}>女</Text>
+            {
+              this.state.femaleChecked ? (
+                <Image
+                  source={ require('../resource/gender-selected.png') }
+                  style={{
+                    width: 15,
+                    height: 10,
+                    marginRight: 10,
+                    backgroundColor: 'rgba(0, 0, 0, 0)'
+                  }}/>
+              ) : (
+                null
+              )
+            }
+          </View>
+        </TouchableWithoutFeedback>
       </Image>
     );
   }

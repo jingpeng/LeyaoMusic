@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
+  Alert,
   AsyncStorage,
   Dimensions,
   Image,
