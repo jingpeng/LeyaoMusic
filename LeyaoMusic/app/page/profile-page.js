@@ -81,6 +81,7 @@ export default class ProfilePage extends Component {
                   avatar: {uri: (APIConstant.BASE_FILE_URI + json.data.pic)},
                   realName: json.data.realname,
                   userName: json.data.username,
+                  gender: json.data.sex
                 })
               } else {
                 Alert.alert('', json.errorCode)
@@ -186,6 +187,12 @@ export default class ProfilePage extends Component {
   }
 
   render() {
+    var sex = this.state.gender
+    if(this.state.gender == 'M') {
+      sex = '男'
+    } else if(this.state.gender == 'F') {
+      sex = '女'
+    }
     return (
       <Image
         source={ require('../resource/main-background.jpg') }
@@ -311,7 +318,7 @@ export default class ProfilePage extends Component {
               fontSize: 13,
               color: '#ffffff',
               marginRight: 11
-            }}>{ this.state.gender }</Text>
+            }}>{ sex }</Text>
         </View>
         <View
           style={{

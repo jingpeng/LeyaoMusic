@@ -176,7 +176,8 @@ export default class RegisterTwoPage extends Component {
           var body = {
             'realname': copy.state.name,
             'pic': copy.state.data,
-            'friends': ""
+            'friends': "",
+            'sex': copy.state.maleChecked ? 'M' : 'F'
           }
           APIClient.access(APIInterface.updateUser(result, body))
             .then((response) => {
