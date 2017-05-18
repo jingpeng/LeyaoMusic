@@ -26,7 +26,8 @@ export default class UpdateGenderPage extends Component {
       indicating: false,
       maleChecked: (props.gender == 'M') ? true : false,
       femaleChecked: (props.gender == 'F') ? true : false,
-      sex: ''
+      sex: '',
+      parentComponent: props.parentComponent
     }
 
     this.save.bind(this)
@@ -58,7 +59,9 @@ export default class UpdateGenderPage extends Component {
 
   save() {
     copy = this
+    copy.setState({ indicating: true})
     AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+      copy.setState({ indicating: false})
       if (error) {
         console.log(error)
         return
@@ -71,6 +74,7 @@ export default class UpdateGenderPage extends Component {
           var body = {
             'sex': copy.state.sex
           }
+          copy.setState({ indicating: true})
           APIClient.access(APIInterface.updateUser(result, body))
             .then((response) => {
               copy.setState({ indicating: false})
@@ -79,7 +83,8 @@ export default class UpdateGenderPage extends Component {
             .then((json) => {
               console.log(json)
               if(json.callStatus == APIConstant.STATUS_SUCCEED) {
-                Alert.alert('', json.errorCode)
+                Actions.pop()
+                copy.state.parentComponent.load()
               } else {
                 Alert.alert('', json.errorCode)
               }
@@ -101,6 +106,7 @@ export default class UpdateGenderPage extends Component {
           flex: 1,
           width: null,
           height: null,
+          alignItems: 'center',
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
         <ActivityIndicator

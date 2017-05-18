@@ -169,14 +169,17 @@ export default class ProfilePage extends Component {
   }
 
   updateName() {
+    var copy = this;
     Actions.update_name({
-      realName: this.state.realName
+      realName: this.state.realName,
+      parentComponent: copy
     })
   }
 
   updateGender() {
     Actions.update_gender({
-      gender: this.state.gender
+      gender: this.state.gender,
+      parentComponent: copy
     })
   }
 

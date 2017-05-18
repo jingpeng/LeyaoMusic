@@ -25,7 +25,8 @@ export default class UpdateNamePage extends Component {
     super(props)
     this.state = {
       indicating: false,
-      name: props.realName
+      name: props.realName,
+      parentComponent: props.parentComponent
     }
   }
 
@@ -35,7 +36,9 @@ export default class UpdateNamePage extends Component {
 
   save() {
     copy = this
+    copy.setState({ indicating: true})
     AsyncStorage.getItem(StorageConstant.TOKEN, function(error, result) {
+      copy.setState({ indicating: false})
       if (error) {
         console.log(error)
         return
@@ -48,6 +51,7 @@ export default class UpdateNamePage extends Component {
           var body = {
             'realname': copy.state.name
           }
+          copy.setState({ indicating: true})
           APIClient.access(APIInterface.updateUser(result, body))
             .then((response) => {
               copy.setState({ indicating: false})
@@ -57,6 +61,7 @@ export default class UpdateNamePage extends Component {
               console.log(json)
               if(json.callStatus == APIConstant.STATUS_SUCCEED) {
                 Actions.pop()
+                copy.state.parentComponent.load()
               } else {
                 Alert.alert('', json.errorCode)
               }
@@ -78,6 +83,7 @@ export default class UpdateNamePage extends Component {
           flex: 1,
           width: null,
           height: null,
+          alignItems: 'center',
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
         <ActivityIndicator
