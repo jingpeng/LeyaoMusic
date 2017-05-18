@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  ActivityIndicator,
   AsyncStorage,
   Dimensions,
   Image,
@@ -22,6 +23,7 @@ export default class UpdateNamePage extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      indicating: false,
       name: props.realName
     }
   }
@@ -77,6 +79,14 @@ export default class UpdateNamePage extends Component {
           height: null,
           backgroundColor: 'rgba(0, 0, 0, 0)',
         }}>
+        <ActivityIndicator
+          animating={ this.state.indicating }
+          style={{
+            position: 'absolute',
+            top: (Dimensions.get('window').height - 80) / 2,
+            height: 80
+          }}
+          size="large"/>
         <View
           style={{
             width: Dimensions.get('window').width,
