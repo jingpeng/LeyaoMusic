@@ -174,6 +174,12 @@ export default class ProfilePage extends Component {
     })
   }
 
+  updateGender() {
+    Actions.update_gender({
+      gender: this.state.gender
+    })
+  }
+
   logout() {
     // 存储登陆token
     AsyncStorage.removeItem(StorageConstant.TOKEN, function(error) {
@@ -296,30 +302,33 @@ export default class ProfilePage extends Component {
               backgroundColor: 'rgba(255, 255, 255, 0.1)'
             }}/>
         </View>
-        <View
-          style={{
-            width: Dimensions.get('window').width,
-            height: 43,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-          <Text
+        <TouchableWithoutFeedback
+          onPress={ this.updateGender.bind(this) }>
+          <View
             style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              color: '#ffffff',
-              marginLeft: 11
-            }}>性别</Text>
-          <Text
-            style={{
-              fontFamily: 'ArialMT',
-              fontSize: 13,
-              color: '#ffffff',
-              marginRight: 11
-            }}>{ sex }</Text>
-        </View>
+              width: Dimensions.get('window').width,
+              height: 43,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                color: '#ffffff',
+                marginLeft: 11
+              }}>性别</Text>
+            <Text
+              style={{
+                fontFamily: 'ArialMT',
+                fontSize: 13,
+                color: '#ffffff',
+                marginRight: 11
+              }}>{ sex }</Text>
+          </View>
+        </TouchableWithoutFeedback>
         <View
           style={{
             width: Dimensions.get('window').width,
