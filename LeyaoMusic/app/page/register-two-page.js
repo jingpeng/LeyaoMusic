@@ -45,6 +45,7 @@ export default class RegisterTwoPage extends Component {
     this.state = {
       indicating: false,
       nameValidate: false,
+      emailValidate: false,
       maleChecked: false,
       femaleChecked: false,
       nextEnable: false,
@@ -53,7 +54,8 @@ export default class RegisterTwoPage extends Component {
       avatar: "",
       // 用来存储上传成功后的文件名
       data: "",
-      name: ""
+      name: "",
+      email: ""
     }
   }
 
@@ -129,6 +131,17 @@ export default class RegisterTwoPage extends Component {
     })
   }
 
+  emailOnChange(text) {
+    if(text.length == 0){
+      this.setState({ emailValidate: false }, () => { this.checkNext() })
+    } else {
+      this.setState({ emailValidate: true }, () => { this.checkNext() })
+    }
+    this.setState({
+      email: text
+    })
+  }
+
   checkMale() {
     if(!this.state.maleChecked) {
       this.setState({
@@ -152,7 +165,7 @@ export default class RegisterTwoPage extends Component {
   }
 
   checkNext() {
-    if(this.state.nameValidate) {
+    if(this.state.nameValidate && this.state.emailValidate) {
       this.setState({ nextEnable: true })
     } else {
       this.setState({ nextEnable: false })
@@ -177,7 +190,8 @@ export default class RegisterTwoPage extends Component {
             'realname': copy.state.name,
             'pic': copy.state.data,
             'friends': "",
-            'sex': copy.state.maleChecked ? 'M' : 'F'
+            'sex': copy.state.maleChecked ? 'M' : 'F',
+            'email': copy.state.email
           }
           APIClient.access(APIInterface.updateUser(result, body))
             .then((response) => {
@@ -410,6 +424,7 @@ export default class RegisterTwoPage extends Component {
                     color: '#ffffff'
                   }}>邮箱</Text>
                 <TextInput
+                  onChangeText = { this.emailOnChange.bind(this) }
                   style={{
                     width: 188,
                     fontFamily: 'ArialMT',

@@ -81,7 +81,8 @@ export default class ProfilePage extends Component {
                   avatar: {uri: (APIConstant.BASE_FILE_URI + json.data.pic)},
                   realName: json.data.realname,
                   userName: json.data.username,
-                  gender: json.data.sex
+                  gender: json.data.sex,
+                  email: json.data.email
                 })
               } else {
                 Alert.alert('', json.errorCode)
