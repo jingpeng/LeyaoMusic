@@ -22,6 +22,8 @@ import NoteDurationPage from './page/note-duration-page';
 import UpdateNamePage from './page/update-name-page';
 import UpdateGenderPage from './page/update-gender-page';
 import UpdateEmailPage from './page/update-email-page';
+import AboutLeyaoPage from './page/about-leyao-page';
+import MusicianPage from './page/musician-page';
 
 import TabIconWidget from './widget/tab-icon-widget'
 
@@ -87,7 +89,7 @@ const scenes = Actions.create(
         hideNavBar={ true }
         component={ SightsingPage }
         icon={ TabIconWidget }
-        title="视唱"
+        title="乐理"
         selectedIcon={ require('./resource/sightsing-selected.png') }
         unSelectedIcon={ require('./resource/sightsing-unselected.png') }
         selectedColor='rgba(179, 214, 110, 1)'
@@ -97,7 +99,7 @@ const scenes = Actions.create(
         hideNavBar={ true }
         component={ EarTrainingPage }
         icon={ TabIconWidget }
-        title="练耳"
+        title="相关"
         selectedIcon={ require('./resource/headphone-selected.png') }
         unSelectedIcon={ require('./resource/headphone-unselected.png') }
         selectedColor='rgba(179, 214, 110, 1)'
@@ -138,5 +140,13 @@ const scenes = Actions.create(
       key="update_email"
       hideNavBar={ true }
       component={ UpdateEmailPage }/>
+    <Scene
+      key="about_leyao"
+      hideNavBar={ true }
+      component={ AboutLeyaoPage }/>
+    <Scene
+      key="musician"
+      hideNavBar={ true }
+      component={ MusicianPage }/>
   </Scene>
 );

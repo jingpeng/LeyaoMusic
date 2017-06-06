@@ -42,7 +42,7 @@ export default class SightsingPage extends Component {
               fontFamily: 'ArialMT',
               fontSize: 18,
               color: '#ffffff'
-            }}>视唱</Text>
+            }}>乐理</Text>
         </View>
         <TouchableWithoutFeedback
           onPress={ this.staveIntroduce.bind(this) }>

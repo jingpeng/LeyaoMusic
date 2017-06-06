@@ -12,12 +12,12 @@ import {
 
 export default class EarTrainingPage extends Component {
 
-  staveIntroduce() {
-    Actions.stave_introduction()
+  aboutLeyao() {
+    Actions.about_leyao()
   }
 
-  noteDuration() {
-    Actions.note_duration()
+  musician() {
+    Actions.musician()
   }
 
   render() {
@@ -42,10 +42,10 @@ export default class EarTrainingPage extends Component {
               fontFamily: 'ArialMT',
               fontSize: 18,
               color: '#ffffff'
-            }}>练耳</Text>
+            }}>乐理</Text>
         </View>
         <TouchableWithoutFeedback
-          onPress={ this.staveIntroduce.bind(this) }>
+          onPress={ this.aboutLeyao.bind(this) }>
           <View
             style={{
               width: Dimensions.get('window').width,
@@ -66,7 +66,7 @@ export default class EarTrainingPage extends Component {
                 fontSize: 13,
                 color: '#ffffff',
                 marginLeft: 15
-              }}>五线谱介绍，谱号，加线</Text>
+              }}>关于乐谣</Text>
           </View>
         </TouchableWithoutFeedback>
         <Image
@@ -78,7 +78,7 @@ export default class EarTrainingPage extends Component {
             marginLeft: 11
           }}/>
         <TouchableWithoutFeedback
-          onPress={ this.noteDuration.bind(this) }>
+          onPress={ this.musician.bind(this) }>
           <View
             style={{
               width: Dimensions.get('window').width,
@@ -99,7 +99,7 @@ export default class EarTrainingPage extends Component {
                 fontSize: 13,
                 color: '#ffffff',
                 marginLeft: 15
-              }}>音符时值（持续时间长短）</Text>
+              }}>合作艺人专辑</Text>
           </View>
         </TouchableWithoutFeedback>
         <Image

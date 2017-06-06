@@ -16,6 +16,14 @@ export default class HomePage extends Component {
     Actions.notification()
   }
 
+  sightsing() {
+    Actions.sightsing()
+  }
+
+  earTraining() {
+    Actions.ear_training()
+  }
+
   render() {
     return (
       <Image
@@ -67,46 +75,52 @@ export default class HomePage extends Component {
             top: 246,
             flexDirection: 'row'
           }}>
-          <View
-            style={{
-              width: Dimensions.get('window').width / 2
-            }}>
-            <Image
-              source={ require('../resource/sightsing-large.png') }
+          <TouchableWithoutFeedback
+            onPress={ this.sightsing.bind(this) }>
+            <View
               style={{
-                width: 62,
-                height: 62,
-                alignSelf: 'center'
-              }}/>
-            <Text
+                width: Dimensions.get('window').width / 2
+              }}>
+              <Image
+                source={ require('../resource/sightsing-large.png') }
+                style={{
+                  width: 62,
+                  height: 62,
+                  alignSelf: 'center'
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  color: '#ffffff',
+                  alignSelf: 'center',
+                  marginTop: 30
+                }}>乐理</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={ this.earTraining.bind(this) }>
+            <View
               style={{
-                fontFamily: 'ArialMT',
-                fontSize: 13,
-                color: '#ffffff',
-                alignSelf: 'center',
-                marginTop: 30
-              }}>视唱</Text>
-          </View>
-          <View
-            style={{
-              width: Dimensions.get('window').width / 2
-            }}>
-            <Image
-              source={ require('../resource/headphone-large.png') }
-              style={{
-                width: 62,
-                height: 62,
-                alignSelf: 'center'
-              }}/>
-            <Text
-              style={{
-                fontFamily: 'ArialMT',
-                fontSize: 13,
-                color: '#ffffff',
-                alignSelf: 'center',
-                marginTop: 30
-              }}>练耳</Text>
-          </View>
+                width: Dimensions.get('window').width / 2
+              }}>
+              <Image
+                source={ require('../resource/headphone-large.png') }
+                style={{
+                  width: 62,
+                  height: 62,
+                  alignSelf: 'center'
+                }}/>
+              <Text
+                style={{
+                  fontFamily: 'ArialMT',
+                  fontSize: 13,
+                  color: '#ffffff',
+                  alignSelf: 'center',
+                  marginTop: 30
+                }}>相关</Text>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </Image>
     );
