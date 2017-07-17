@@ -13,6 +13,7 @@ import {
   Actions,
   ActionConst
 } from 'react-native-router-flux';
+import CryptoJS from 'crypto-js';
 
 import APIClient from '../service/api-client';
 import APIInterface from '../service/api-interface';
@@ -72,7 +73,7 @@ export default class LoginPage extends Component {
         loginEnable: !this.state.loginEnable
       })
 
-      APIClient.access(APIInterface.login(this.state.phone, this.state.password))
+      APIClient.access(APIInterface.login(this.state.phone, CryptoJS.MD5(this.state.password, { asString: true }).toString()))
         .then((response) => {
           return response.json()
         })

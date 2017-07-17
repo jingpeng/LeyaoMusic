@@ -14,6 +14,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import CryptoJS from 'crypto-js';
 
 import APIClient from '../service/api-client';
 import APIInterface from '../service/api-interface';
@@ -144,7 +145,7 @@ export default class RegisterOnePage extends Component {
 
       // 进行注册操作
       this.setState({ indicating: true})
-      APIClient.access(APIInterface.register(this.state.phone, this.state.password, this.state.code))
+      APIClient.access(APIInterface.register(this.state.phone, CryptoJS.MD5(this.state.password, { asString: true }).toString(), this.state.code))
         .then((response) => {
           this.setState({ indicating: false})
           return response.json()
